@@ -14,13 +14,187 @@ driver = webdriver.Chrome()
 driver.get('https://ui.ptlogin2.qq.com/cgi-bin/login?appid=614038002&style=9&s_url=https%3A%2F%2Fdld.qzapp.z.qq.com%2Fqpet%2Fcgi-bin%2Fphonepk%3Fcmd%3Dindex%26channel%3D0')
 #功能字典
 dic = {}
+def back_home():
+    driver.find_element_by_link_text('返回大乐斗首页').click()
+
+#出错界面上会有返回这个链接
+def error():
+    return driver.find_element_by_link_text('返回')
+
+
+#分析来看 决定活动领奖的 subtype 的值 88是神魔转盘  ，124 是开心娃娃机，56是登录有礼
+def shenmo_zhuanpan():
+    try:
+        url_sz = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=newAct&subtype=88&op=1'
+        driver.get(url_sz)
+        back_home()
+    except:
+        print('神魔转盘出错')
+def cai_danshuang():
+    try:
+        #value 2是双数 1 是单数，这里默认全双
+        url_ds = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=oddeven&value=2'
+        for i in range(5):
+            driver.get(url_ds)
+            sleep(1)
+        back_home()
+    except:
+        print('猜单双出错')
+
+
+def wawa_ji():
+    try:
+        url_wj = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=newAct&subtype=124&op=1'
+        driver.get(url_wj)
+        back_home()
+    except:
+        print('开心娃娃机')
+
+def xianwu_xiuzhen(): #具体挑战还没做
+    try:
+        #领取活跃度80的次数
+        url_lc = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=immortals&op=getreward&taskid=1'
+        driver.get(url_lc)
+
+    except:
+        print('仙武修真出错')
+
+def wulin():
+    try:
+        url_wl = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=fastSignWulin&ifFirstSign=1'
+        driver.get(url_wl)
+        #人满了点 继续报名
+        driver.find_element_by_link_text('继续报名').click()
+        back_home()
+    except:
+        print('武林大会出错')
+
+def lingjiang():
+    try:
+        # 1是小 2是中 3 是大 4是终极
+        def do(i):
+            url_lj = f'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=liveness_getgiftbag&giftbagid={i}&action=1'
+            driver.get(url_lj)
+        do(1)
+        sleep(1)
+        do(2)
+        sleep(1)
+        do(3)
+        sleep(1)
+        do(4)
+        sleep(1)
+        back_home()
+    except:
+        print('领奖出错')
+
+def jiebai_zhengba():
+    try:
+        url_jz = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=2540097595&B_UID=0&sid=&channel=0&g_ut=1&cmd=brofight&subtype=0'
+        driver.get(url_jz)
+        # 4 是无限制
+        url_bm = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=2540097595&B_UID=0&sid=&channel=0&g_ut=1&cmd=brofight&subtype=1&gidIdx=4'
+        driver.get(url_bm)
+        back_home()
+    except:
+        print("结拜报名出错")
+
+def shangdian_huanhun():  #商店买还魂丹凑活跃度
+    try:
+        url_bh = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=viewgoods&id=3089&pay_type=7'
+        driver.get(url_bh)
+        #购买还魂丹
+        driver.find_element_by_xpath('//input[@type="button" and @value="兑换"]').click()
+        back_home()
+
+    except:
+        print('商店买还魂丹出错')
+
+def fenxiang():
+    try:
+        #一键分享
+        url_fx = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=sharegame&subtype=6'
+        driver.get(url_fx)
+        #斗神塔的分享
+        url_ds = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=sharegame&subtype=2&shareinfo=4'
+        back_home()
+    except:
+        print('分享出错')
+
+def huiliu_zhaohui():
+    try:
+        #召回页面
+        url_zh = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=callback&subtype=3&page=1'
+        driver.get(url_zh)
+        #召回三次,  后面还有个空格真的。。。。。
+        for i in range(3):
+            driver.find_element_by_link_text('回来玩吧！').click()
+        back_home()
+    except:
+        print('召回出错')
+
+def mibao():
+    try:
+        #高级
+        url_mb1 = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=tenlottery&op=2&type=0'
+        #极品
+        url_mb2 = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=tenlottery&op=2&type=1'
+        #就是换了个 type 的值而已
+
+        driver.get(url_mb1)
+        driver.get(url_mb2)
+        back_home()
+
+    except:
+        print('邪神秘宝出错')
+
+def bangpai_gongfeng():
+    try:
+        #主要是id 标识 物品 3089 是 还魂丹  page 不关键只是和显示有关
+        url_gf = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=oblation&id=3089&page=3'
+        driver.get(url_gf)
+        back_home()
+    except:
+        print('供奉出错')
+
+def kuangdong():
+    try:
+        #矿洞领奖
+        url_kl = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=factionmine&op=reward'
+        driver.get(url_kl)
+        #挑战
+        url_tz = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=factionmine&op=fight'
+        for i in range(3):
+            driver.get(url_tz)
+        back_home()
+    except:
+        print('矿洞出错')
+
+
 def lueduo():
     try:
+        #1 是报名，6是领取胜负奖励
+        def do(i):
+            url_lm = f'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=forage_war&subtype={i}'
+            driver.get(url_lm)
+        try:
+            #报名
+            do(1)
+            #领奖
+            do(6)
+
+        except:
+            print('报名领奖')
         #最后的 id 代表掠夺的 位置   313 小粮仓   ，205 中粮仓， 102 大粮仓 的 起止数
-        url_ld ='https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=forage_war&subtype=4&gra_id=313'
-        for i in range(40):
-            driver.get(url_ld)
-            sleep(1)
+        try:
+            url_ld ='https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=forage_war&subtype=4&gra_id=313'
+            for i in range(40):
+                driver.get(url_ld)
+                sleep(1)
+                if error():
+                    break
+            back_home()
+        except:
+            print('抢夺粮仓出错')
 
     except:
         print('掠夺出错')
@@ -47,8 +221,7 @@ def jingji_chang():
     #竞技场还没开先 略过
     pass
 
-def back_home():
-    driver.find_element_by_link_text('返回大乐斗首页').click()
+
 
 def shier_gong():
     try:
@@ -71,7 +244,7 @@ def doushen_ta():
     except:
         print('斗神塔出错')
 
-def baoxing_tianxia():
+def biaoxing_tianxia():
     try:
         def do(i):
             url_bx = f'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=cargo&op={i}'
@@ -95,9 +268,14 @@ def baoxing_tianxia():
 def piaomiao_huanjing():
     try:
         driver.find_element_by_link_text('幻境').click()
+        #先返回
+        driver.find_element_by_link_text('返回飘渺幻境').click()
         #进入你最高级的副本
         driver.find_elements_by_xpath('//div/p/a')[-3].click()
         #打怪 还没写
+        for i in range(5):
+            driver.find_element_by_link_text('乐斗').click()
+            sleep(1)
 
         back_home()
     except:
@@ -167,6 +345,7 @@ def jitan():
         #只是单纯 转动  具体功能 还要收集数据
         url_j = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=altar&op=spinwheel'
         driver.get(url_j)
+        '//dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=altar&op=dosteal&id=18914'
     except:
         print('祭坛出错')
 
@@ -346,6 +525,12 @@ def li_lian():
             #直接get这个url会直接跳到这个页面
             driver.get(url_song_jiang)
             sleep(1)
+        #扫地僧
+        url_sd = 'https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&sid=&channel=0&g_ut=1&cmd=mappush&subtype=3&mapid=7&npcid=6134&pageid=2'
+        for i in range(2):
+            #直接get这个url会直接跳到这个页面
+            driver.get(url_sd)
+            sleep(1)
         driver.find_element_by_link_text('返回大乐斗首页').click()
     except:
         print('历练出错')
@@ -382,7 +567,6 @@ def friend():
 
 
 def login():
-    #
     with open('../Data/qq.json', 'r') as fp:
          a = json.load(fp)
     # print(a['qq'])
@@ -396,7 +580,7 @@ def login():
     #不加sleep 会因为 iframe 没加载出来 而报错
     sleep(1)
     try:
-        #登录滑块验证  ，不成功就调调    (i+1)*43 这个值  直接 写个220 、215 .。。每次缺口可能不一样
+        #登录滑块验证
         driver.switch_to.frame('tcaptcha_iframe')
         tcaptcha_drag_thumb = driver.find_element_by_id('tcaptcha_drag_thumb')
         action = ActionChains(driver)
@@ -454,5 +638,18 @@ if __name__ == '__main__':
     # baoxing_tianxia()
     # doushen_ta()
     # shier_gong()
-    lueduo()
+    # lueduo()
+    # kuangdong()
+    # bangpai_gongfeng()
+    # mibao()
+    # huiliu_zhaohui()
+    # fenxiang()
+    # shangdian_huanhun()
+    # jiebai_zhengba()
+    # mission()
+    # lingjiang()
+    # wulin()
+    # wawa_ji()
+    # shenmo_zhuanpan()
+    cai_danshuang()
     # driver.get('https://dld.qzapp.z.qq.com/qpet/cgi-bin/phonepk?zapp_uin=&B_UID=0&sid=&channel=0&g_ut=1&cmd=broadcast')
